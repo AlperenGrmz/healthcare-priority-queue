@@ -1,8 +1,16 @@
 const fs = require("fs");
 const express = require("express");
-const MinHeap = require("./heap"); // Min-Heap'i dahil et
+const path = require("path")
+const MinHeap = require("./heap");
+
 const app = express();
+
+const PORT = 3000;
+
+//Middleware
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
 
 const patients = new MinHeap(); // Süresi yeterli hastalar (Min-Heap)
 const overduePatients = new MinHeap(); // Süresi aşan hastalar (Min-Heap)
@@ -28,7 +36,7 @@ function loadInputFile() {
     }
   }
   console.log(patients.getAll()); // Normal hastalar (yeterli süreyle)
-  console.log(overduePatients.getAll()); // Süresi aşan hastalar
+  console.log(overduePatients.getAll()); // Süresi aşan hastalar kapaaaaaaaaaaaaaaaaaaaaaa
 
   // Çıktı dosyasına yaz
   writeOutputFile();
@@ -67,7 +75,17 @@ function writeOutputFile() {
   );
 }
 
-// Yeni hasta ekle
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
+// Tüm hastaları görüntüle
+app.get("/patients", (req, res) => {
+  const allPatients = [...patients.getAll(), ...overduePatients.getAll()]; // Her iki heap'teki hastaları birleştir
+  res.status(200).json(allPatients); // JSON olarak döndür
+});
+
+// Yeni Hasta Ekleme
 app.post("/addPatient", (req, res) => {
   const { id, priority, duration } = req.body;
 
@@ -85,17 +103,13 @@ app.post("/addPatient", (req, res) => {
     // Süresi aşan hastayı overdue heap'e ekle
     overduePatients.insert({ id, priority, duration, treatedToday: false });
     res.status(400).json({ message: "Hasta eklenemedi, süreyi aşıyor!" });
+
+    // Dosyayı güncelle
+    writeOutputFile();
   }
 });
 
-// Tüm hastaları görüntüle
-app.get("/patients", (req, res) => {
-  const allPatients = [...patients.getAll(), ...overduePatients.getAll()]; // Her iki heap'teki hastaları birleştir
-  res.status(200).json(allPatients); // JSON olarak döndür
-});
-
 app.delete("/removePatient", (req, res) => {
-    console.log(patients.getAll())
   // Min-Heap'ten root öğesini çıkar
   if (patients.getAll().length === 0) {
     return res.status(404).json({ message: "Hastalar listesi boş!" });
@@ -111,8 +125,7 @@ app.delete("/removePatient", (req, res) => {
   writeOutputFile();
 });
 
-// Server başlat
-const PORT = 3000;
+
 app.listen(PORT, () => {
   console.log(`Server çalışıyor... Port: ${PORT}`);
   loadInputFile(); // Başlangıçta input.txt'yi yükle

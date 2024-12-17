@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasta Yönetim Sistemi</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Hasta Yönetim Sistemi</h1>
+
+    <!-- Ana Tablo: Bugün Tedavi Olacak Hastalar -->
+    <h2>Bugün Tedavi Olacak Hastalar</h2>
+    <table id="todayPatientTable" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Priority</th>
+                <th>Duration</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Açılır/Kapanır Bölüm -->
+    <h2 style="cursor: pointer;" id="toggleOverdueBtn">Süresi Aşan Hastaları Göster &#9660;</h2>
+    <div id="overduePatientsSection" style="display: none;">
+        <table id="overduePatientTable" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Priority</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Hasta Ekleme Formu -->
+    <h2>Yeni Hasta Ekle</h2>
+    <form id="addPatientForm">
+        <input type="number" id="priority" placeholder="Priority" required>
+        <input type="number" id="duration" placeholder="Duration (minutes)" required>
+        <button type="submit">Hasta Ekle</button>
+    </form>
+
+    <!-- Hasta Silme Butonu -->
+    <h2>Hasta Sil</h2>
+    <button id="removePatientBtn">Öncelikli Hastayı Sil</button>
+
+    <script src="/script.js"></script>
+</body>
+</html>
