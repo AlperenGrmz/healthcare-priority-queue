@@ -44,7 +44,7 @@ Projeyi çalıştırmak için aşağıdaki adımları takip edin.
 1. Bu projeyi klonlayın:
    ```bash
    git clone [REPO-LINK]
-   cd healthcare-priority-queue/backend
+   cd Proje/backend
    ```
 2. Gerekli bağımlılıkları yükleyin:
    ```bash
