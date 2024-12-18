@@ -9,6 +9,19 @@
 <body>
     <h1>Hasta Yönetim Sistemi</h1>
 
+    <h2>Tedavi Olmus Hastalar</h2>
+    <table id="treatedTableBody" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Priority</th>
+                <th>Duration</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
     <!-- Ana Tablo: Bugün Tedavi Olacak Hastalar -->
     <h2>Bugün Tedavi Olacak Hastalar</h2>
     <table id="todayPatientTable" border="1">
@@ -37,6 +50,14 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+
+    <!-- Dosya indirme bağlantısı -->
+    <div>
+        <h2>Tüm Listeyi İndir</h2>
+        <a href="http://localhost:3000/download" download>
+            <button class="download-btn">&#x2B73; İndir<span>(output.txt)</span></button>
+        </a>
     </div>
 
     <!-- Hasta Ekleme Formu -->

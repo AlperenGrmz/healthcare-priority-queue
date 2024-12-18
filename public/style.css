@@ -16,16 +16,26 @@ th, td {
     border: 1px solid #ddd;
 }
 
-#todayPatientTable tbody tr:nth-child(even) {
+tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-#todayPatientTable tbody tr:nth-child(odd) {
+tbody tr:nth-child(odd) {
     background-color: #e0e0e0;
 }
 
-#todayPatientTable tbody tr:first-child {
+#treatedTableBody thead tr {
+    background-color: #388E3C;
+    color: white;
+}
+
+#todayPatientTable thead tr {
     background-color: #f0ad4e;
+    color: white;
+}
+
+#overduePatientTable thead tr {
+    background-color: #F44336;
     color: white;
 }
 
@@ -45,7 +55,7 @@ h2 {
 }
 
 #toggleOverdueBtn {
-    color: blue;
+    color: #F44336;
     text-decoration: underline;
 }
 
@@ -54,3 +64,60 @@ h2 {
     display: none;
     transition: all 0.5s ease-in-out;
 }
+
+input {
+    height: 40px;
+    margin: 5px;
+    font-size: 18px;
+}
+
+#addPatientForm button {
+    background-color: #388E3C;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+#addPatientForm button:hover {
+    background-color: #4CAF50;
+}
+
+#removePatientBtn {
+    background-color: #F44336;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+#removePatientBtn:hover {
+    background-color: #D32F2F;  
+}
+
+.download-btn {
+    background-color: #007BFF;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+.download-btn:hover {
+    background-color: #0056b3;
+}
+
+.download-btn span {
+    font-size: 14px;
+    color: #E0E0E0;
+    margin-left: 5px;
+    font-weight: normal;
+  }

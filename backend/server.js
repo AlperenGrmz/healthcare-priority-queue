@@ -1,19 +1,21 @@
 const fs = require("fs");
 const express = require("express");
-const path = require("path")
+const path = require("path");
 const MinHeap = require("./heap");
+const cors = require("cors");
 
 const app = express();
 
 const PORT = 3000;
 
-//Middleware
+// Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
+app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(cors());
 
 const patients = new MinHeap(); // Süresi yeterli hastalar (Min-Heap)
 const overduePatients = new MinHeap(); // Süresi aşan hastalar (Min-Heap)
+const treatedPatients = []; // Silinen hastaların tutulduğu liste
 
 let totalDuration = 0; // Toplam tedavi süresi
 
@@ -35,98 +37,109 @@ function loadInputFile() {
       overduePatients.insert({ id, priority, duration, treatedToday: false });
     }
   }
-  console.log(patients.getAll()); // Normal hastalar (yeterli süreyle)
-  console.log(overduePatients.getAll()); // Süresi aşan hastalar kapaaaaaaaaaaaaaaaaaaaaaa
+  console.log(patients.getAll());
+  console.log(overduePatients.getAll());
 
-  // Çıktı dosyasına yaz
   writeOutputFile();
 }
 
-// Çıktı dosyasına yaz (Sıralı şekilde hastaları yaz)
+// Çıktı dosyasına yaz
 function writeOutputFile() {
-  const allPatients = [...patients.getAll()]; // Normal hastaları al (Min-Heap'teki tüm öğeleri)
+  const allPatients = [...patients.getAll()];
+  const overduePatientsArray = [...overduePatients.getAll()];
 
-  // Süresi aşan hastaları al
-  const overduePatientsArray = [...overduePatients.getAll()]; // Süresi aşan hastaları al (Min-Heap'teki tüm öğeleri)
-
-  // Dosyayı sil ve tekrar yaz
   fs.writeFileSync(
     "output.txt",
     allPatients
       .map(
         (patient) =>
-          `${patient.id} ${patient.priority} ${patient.duration} ${
-            patient.treatedToday ? "(treated)" : "(overdue)"
-          }\n`
+          `${patient.id} ${patient.priority} ${patient.duration} (not treated)\n`
       )
       .join("")
   );
+
   fs.appendFileSync(
     "output.txt",
     "\n--- Süresi Aşan Hastalar ---\n" +
-    overduePatientsArray
-      .map(
-        (patient) =>
-          `${patient.id} ${patient.priority} ${patient.duration} ${
-            patient.treatedToday ? "(treated)" : "(overdue)"
-          }\n`
-      )
-      .join("")
+      overduePatientsArray
+        .map(
+          (patient) =>
+            `${patient.id} ${patient.priority} ${patient.duration} ${
+              patient.treatedToday ? "(treated)" : "(overdue)"
+            }\n`
+        )
+        .join("")
+  );
+
+  fs.appendFileSync(
+    "output.txt",
+    "\n--- Tedavi Olmuş Hastalar ---\n" +
+      treatedPatients
+        .map(
+          (patient) =>
+            `${patient.id} ${patient.priority} ${patient.duration} (treated)\n`
+        )
+        .join("")
   );
 }
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+// Ana sayfa
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
+
+// Dosya indirme api
+app.get("/download", (req, res) => {
+  const filePath = path.join(__dirname, "output.txt");
+  res.download(filePath, "output.txt", (err) => {
+    if (err) {
+      console.error("Dosya indirilemedi:", err);
+      res.status(500).send("Dosya indirilemedi.");
+    }
+  });
 });
 
 // Tüm hastaları görüntüle
 app.get("/patients", (req, res) => {
-  const allPatients = [...patients.getAll(), ...overduePatients.getAll()]; // Her iki heap'teki hastaları birleştir
-  res.status(200).json(allPatients); // JSON olarak döndür
+  const allPatients = {
+    treatedPatients: treatedPatients, // Tedavi olmuş hastalar
+    normalPatients: patients.getAll(), // Normal hastalar
+    overduePatients: overduePatients.getAll(), // Süresi aşan hastalar
+  };
+  res.status(200).json(allPatients);
 });
 
 // Yeni Hasta Ekleme
 app.post("/addPatient", (req, res) => {
   const { id, priority, duration } = req.body;
 
-  // Süreyi kontrol et
   if (totalDuration + duration <= 420) {
-    // 420 dakika (7 saat)
     patients.insert({ id, priority, duration, treatedToday: true });
-    totalDuration += duration; // Toplam süreyi güncelle
+    totalDuration += duration;
 
-    // Dosyayı güncelle
     writeOutputFile();
-
     res.status(200).json({ message: "Hasta başarıyla eklendi!" });
   } else {
-    // Süresi aşan hastayı overdue heap'e ekle
     overduePatients.insert({ id, priority, duration, treatedToday: false });
-    res.status(400).json({ message: "Hasta eklenemedi, süreyi aşıyor!" });
-
-    // Dosyayı güncelle
     writeOutputFile();
+    res.status(400).json({ message: "Hasta eklenemedi, süreyi aşıyor!" });
   }
 });
 
+// Hasta Silme
 app.delete("/removePatient", (req, res) => {
-  // Min-Heap'ten root öğesini çıkar
   if (patients.getAll().length === 0) {
     return res.status(404).json({ message: "Hastalar listesi boş!" });
   }
 
-  // Root öğesini çıkarmak için extractMin() kullanıyoruz
   const patient = patients.extractMin();
+  treatedPatients.push(patient); // Silinen hastayı tedavi edilmişlere ekle
 
-  // Silinen hastayı kaydetme ve yanıt
-  res.status(200).json({ message: "Hasta başarıyla silindi!", patient });
-
-  // Dosyayı tekrar yaz
   writeOutputFile();
+  res.status(200).json({ message: "Hasta başarıyla silindi!", patient });
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server çalışıyor... Port: ${PORT}`);
-  loadInputFile(); // Başlangıçta input.txt'yi yükle
+  loadInputFile();
 });

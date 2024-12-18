@@ -1,0 +1,15 @@
+104 1 60 (not treated)
+110 2 30 (not treated)
+106 2 50 (not treated)
+109 3 35 (not treated)
+102 3 40 (not treated)
+103 8 20 (not treated)
+107 4 45 (not treated)
+108 6 25 (not treated)
+101 5 30 (not treated)
+105 7 15 (not treated)
+111 8 10 (not treated)
+
+--- Süresi Aşan Hastalar ---
+
+--- Tedavi Olmuş Hastalar ---

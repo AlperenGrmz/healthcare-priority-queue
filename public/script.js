@@ -5,21 +5,29 @@ async function loadPatients() {
 
     const todayTableBody = document.querySelector('#todayPatientTable tbody');
     const overdueTableBody = document.querySelector('#overduePatientTable tbody');
+    const treatedTableBody = document.querySelector('#treatedTableBody tbody');
     todayTableBody.innerHTML = ""; // Tabloyu temizle
     overdueTableBody.innerHTML = ""; // Tabloyu temizle
+    treatedTableBody.innerHTML = ""; // Tabloyu temizle
+    console.log(patients);
 
     // Bugün tedavi olacak hastalar ve süresi aşan hastaları ayır
-    const todayPatients = patients.filter(patient => patient.treatedToday);
-    const overduePatients = patients.filter(patient => !patient.treatedToday);
+    const treatedPatients = patients.treatedPatients || []; // Tedavi olmuş hastalar
+    const normalPatients = patients.normalPatients;   // Normal hastalar
+    const overduePatients = patients.overduePatients; // Süresi aşan hastalar
+
+    console.log(treatedPatients);
+    console.log(normalPatients);
+    console.log(overduePatients);
 
     // Bugün tedavi olacak hastaları tabloya ekle
-    todayPatients.forEach(patient => {
+    normalPatients.forEach(patient => {
         const row = `
             <tr>
                 <td>${patient.id}</td>
                 <td>${patient.priority}</td>
                 <td>${patient.duration}</td>
-                <td>Treated</td>
+                <td>Not threated</td>
             </tr>
         `;
         todayTableBody.innerHTML += row;
@@ -36,6 +44,19 @@ async function loadPatients() {
             </tr>
         `;
         overdueTableBody.innerHTML += row;
+    });
+
+    // Tedavi olmuş hastaları tabloya ekle
+    treatedPatients.forEach(patient => {
+        const row = `
+            <tr>
+                <td>${patient.id}</td>
+                <td>${patient.priority}</td>
+                <td>${patient.duration}</td>
+                <td>Treated</td>
+            </tr>
+        `;
+        treatedTableBody.innerHTML += row;
     });
 }
 
