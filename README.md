@@ -1,7 +1,8 @@
 
 # Hastane Yönetim Sistemi
 
-Bu proje, bir hastane yönetim sistemini simüle eder. Sistemde hastaların öncelik sırasına göre sıralanması, tedavi sürelerinin kontrol edilmesi ve tedavi süresini aşan hastaların takibi yapılır. Proje, **backend** (Node.js) ve bir basit **frontend** (HTML) kısmından oluşmaktadır.
+Bu proje, bir hastane yönetim sistemini simüle eder. Sistemde hastaların öncelik sırasına göre **Min-Heap** veri yapısı kullanılarak sıralanması, tedavi sürelerinin kontrol edilmesi ve tedavi süresini aşan hastaların takibi yapılır. **Min-Heap**, hastaların öncelik değerine göre en düşük önceliğe sahip hastanın her zaman en üstte bulunmasını sağlar. Proje, **backend** (Node.js) ve bir basit **frontend** (HTML) kısmından oluşmaktadır.
+
 
 ---
 
