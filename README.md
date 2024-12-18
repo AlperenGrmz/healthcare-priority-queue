@@ -10,7 +10,7 @@ Bu proje, bir hastane yönetim sistemini simüle eder. Sistemde hastaların önc
 
 - **Backend**: Node.js, Express.js, Cors
 - **Veri Yönetimi**: Min-Heap veri yapısı
-- **Frontend**: HTML, CSS (isteğe bağlı)
+- **Frontend**: HTML, CSS, JS
 
 ---
 
