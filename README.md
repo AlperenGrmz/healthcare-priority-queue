@@ -57,7 +57,7 @@ Projeyi çalıştırmak için aşağıdaki adımları takip edin.
 4. Sunucu, `http://localhost:3000` adresinde çalışmaya başlayacaktır.
 
 ### 3. HTML Kullanımı
-1. `Proje/public/index.html` dosyasını bir tarayıcıda açın.
+1. Proje çalıştırıldığında, backend ve frontend aynı portta, **localhost:3000** üzerinde çalışacaktır. Tarayıcıda **http://localhost:3000** adresine giderek uygulamanızı görüntüleyebilirsiniz. 
 2. Backend API ile iletişim kurarak hastalar üzerinde işlemler gerçekleştirebilirsiniz.
 
 ---
